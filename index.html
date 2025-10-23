@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Masuk | Class Manager</title>
+  <style>
+    body {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace;
+    }
+  </style>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-gray-800 to-indigo-950 text-white">
+
+  <div class="bg-slate-900/70 backdrop-blur-xl p-8 rounded-2xl shadow-2xl w-full max-w-md text-center border-b border-slate-700 shadow-md">
+    <div class="w-12 h-12 bg-white text-gray-900 font-bold text-xl mx-auto flex items-center justify-center rounded-full mb-4"><img src="asset/img/love.png" alt=""></div>
+    <h2 class="text-sm tracking-[4px] text-yellow-400 mb-2">Hi!</h2>
+    <h1 class="text-2xl font-bold mb-6">Login Dulu yaa!</h1>
+
+    <div class="space-y-4">
+      <input id="username" type="text" placeholder="Masukkan username"
+        class="w-full px-4 py-3 rounded-lg bg-gray-700 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-500" />
+
+      <input id="password" type="password" placeholder="Masukkan password"
+        class="w-full px-4 py-3 rounded-lg bg-gray-700 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-500" />
+    </div>
+
+    <button onclick="login()"
+      class="w-full py-3 mt-6 bg-yellow-500 hover:bg-yellow-400 text-gray-900 font-semibold rounded-lg transition">
+      Masuk
+    </button>
+    <p id="error-message" class="text-red-400 text-sm mt-3 hidden"></p>
+  </div>
+
+  <div id="toast-failure" 
+     class="fixed top-6 right-6 z-50 flex items-center p-4 rounded-xl shadow-2xl 
+            bg-red-900/70 backdrop-blur-xl border border-red-700 
+            text-red-200 transition-all duration-300 ease-out 
+            transform translate-x-[120%] opacity-0">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+    </svg>
+    
+    <span id="toast-message" class="text-sm font-medium">Username atau password salah.</span>
+
+    <button onclick="hideToast()" class="ml-4 -mr-1 p-1 text-red-300 hover:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-white/50">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+    </button>
+  </div>
+
+  <script>
+    // Konfigurasi username dan password
+    const users = [
+      { username: "Aldi", password: "Aldi123" },
+      { username: "Keisya", password: "Keisya123" },
+    ];
+
+    // Fungsi untuk menampilkan toast notifikasi
+    function showToast(message) {
+      const toast = document.getElementById('toast-failure');
+      const toastMessage = document.getElementById('toast-message');
+      
+      toastMessage.textContent = message;
+      toast.classList.remove('translate-x-[120%]', 'opacity-0');
+      toast.classList.add('translate-x-0', 'opacity-100');
+      
+      // Auto hide setelah 5 detik
+      setTimeout(() => {
+        hideToast();
+      }, 5000);
+    }
+    
+    // Fungsi untuk menyembunyikan toast
+    function hideToast() {
+      const toast = document.getElementById('toast-failure');
+      toast.classList.remove('translate-x-0', 'opacity-100');
+      toast.classList.add('translate-x-[120%]', 'opacity-0');
+    }
+    
+    // Fungsi untuk login
+    function login() {
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value;
+      
+      // Validasi input
+      if (!username || !password) {
+        showToast('Username dan password harus diisi.');
+        return;
+      }
+      
+      // Cek kredensial
+      const user = users.find(u => u.username === username && u.password === password);
+      
+      if (user) {
+        // Simpan informasi user ke localStorage
+        localStorage.setItem('username', username);
+        localStorage.setItem('isLoggedIn', 'true');
+        
+        // Redirect ke dashboard
+        window.location.href = 'dashboard.html';
+      } else {
+        showToast('Username atau password salah.');
+      }
+    }
+    
+    // Event listener untuk tombol Enter
+    document.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        login();
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Valentine Message</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    body {
+      overflow: hidden; /* agar halaman utama tidak bisa di-scroll */
+      scroll-behavior: smooth
+    }
+
+    @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&display=swap');
+
+    .valentine-font {
+      font-family: 'Dancing Script', cursive;
+    }
+
+    /* Container Animations */
+    .scroll-container {
+      transition: all 1s cubic-bezier(0.25, 1, 0.3, 1);
+      transform-origin: center center;
+      cursor: pointer;
+      perspective: 1000px;
+      margin: auto;
+      max-width: 90vw;
+      position: relative;
+      overflow: hidden; /* ini penting agar bagian luar tidak ikut scroll */
+    }
+
+    .scroll-closed {
+      width: 140px;
+      height: 180px;
+      background: linear-gradient(135deg, #d4a574, #b8864c);
+      border-radius: 10px;
+      position: relative;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      transform: rotateY(0deg) scale(1);
+    }
+
+    .scroll-open {
+      width: 90vw;
+      max-width: 400px;
+      height: 70vh;
+      background: #fff8f0;
+      border-radius: 12px;
+      padding: 25px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+      transform: rotateY(0deg) scale(1.02);
+      overflow: hidden; /* jaga agar hanya isi di dalam yang bisa scroll */
+    }
+
+    /* Scroll edge decoration */
+    .scroll-ends {
+      position: absolute;
+      width: 25px;
+      height: 100%;
+      background: #8b5a2b;
+      border-radius: 15px;
+      top: 0;
+      transition: all 0.8s ease;
+      pointer-events: none; /* biar klik tetap ke kontainer */
+    }
+
+    .scroll-ends.left {
+      left: -12px;
+    }
+
+    .scroll-ends.right {
+      right: -12px;
+    }
+
+    /* Label Text */
+    .scroll-label {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #5a3921;
+      font-weight: bold;
+      font-size: 14px;
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+    }
+
+    /* Message Content Animation */
+    .message-content {
+      opacity: 0;
+      transform: translateY(20px) scale(0.95);
+      transition: all 0.7s cubic-bezier(0.25, 1, 0.3, 1);
+      height: 100%;
+      overflow-y: auto; /* ✅ ini membuat isi bisa di-scroll */
+      scrollbar-width: thin;
+      scrollbar-color: #d1a054 transparent;
+      padding-right: 8px;
+    }
+
+    .message-content::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .message-content::-webkit-scrollbar-thumb {
+      background: #d1a054;
+      border-radius: 9999px;
+    }
+
+    .scroll-open .message-content {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    /* Smooth fade for text titles */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .fade-in {
+      animation: fadeIn 1s ease-out forwards;
+    }
+
+    /* Glow effect when open */
+    .scroll-open::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 10px;
+      background: radial-gradient(circle at center, rgba(255, 182, 193, 0.15), transparent 70%);
+      opacity: 0;
+      animation: glow 2s ease-in-out forwards;
+      pointer-events: none;
+    }
+
+    @keyframes glow {
+      from {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    /* ===== RESPONSIVE DESIGN ===== */
+    @media (max-width: 640px) {
+      h1 {
+        font-size: 1.75rem;
+      }
+
+      .scroll-closed {
+        width: 120px;
+        height: 160px;
+      }
+
+      .scroll-open {
+        width: 92vw;
+        height: 75vh;
+        padding: 20px;
+      }
+
+      .message-content {
+        font-size: 0.9rem;
+      }
+
+      .valentine-font.text-3xl {
+        font-size: 1.75rem;
+      }
+
+      .valentine-font.text-2xl {
+        font-size: 1.25rem;
+      }
+
+      .valentine-font.text-xl {
+        font-size: 1rem;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .scroll-open {
+        height: 80vh;
+        padding: 18px;
+      }
+
+      .message-content {
+        font-size: 0.85rem;
+      }
+
+      .valentine-font.text-3xl {
+        font-size: 1.5rem;
+      }
+
+      .valentine-font.text-2xl {
+        font-size: 1.1rem;
+      }
+    }
+  </style>
+</head>
+
+<body class="min-h-screen bg-gradient-to-br from-pink-100 to-red-100 flex items-center justify-center p-4">
+  <div class="text-center">
+    <h1 class="valentine-font text-4xl font-bold text-red-500 mb-8 fade-in">Dibaca Yaaa!!</h1>
+    <p class="text-gray-600 mb-8 fade-in">Klik gulungan kertas Dibawah yaaa!!</p>
+
+    <!-- Scroll Container -->
+    <div class="scroll-container scroll-closed mx-auto" id="scroll">
+      <!-- Closed Scroll -->
+      <div class="scroll-ends left"></div>
+      <div class="scroll-ends right"></div>
+
+      <!-- Open Content -->
+      <div class="message-content">
+        <h2 class="valentine-font text-3xl font-bold text-red-500 mb-6 text-center">Haloo Caa!!</h2>
+        
+        <div class="text-gray-700 text-left space-y-4 text-sm leading-relaxed">
+          <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum, corrupti amet. Delectus dolor doloremque obcaecati! Magni incidunt asperiores neque est eos iste! Assumenda facilis natus sed excepturi sint, ipsa obcaecati.
+          </p>
+          <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut deleniti nisi tempore iure, voluptatem vel veniam repellat fugit doloribus sint nulla! Nam, alias! Unde quisquam iure temporibus sapiente quidem obcaecati magnam delectus maxime sit illum? Cumque reiciendis, autem explicabo ab enim, blanditiis quas perspiciatis ullam iste consectetur, nam assumenda provident.
+          </p>
+          <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut deleniti nisi tempore iure, voluptatem vel veniam repellat fugit doloribus sint nulla! Nam, alias! Unde quisquam iure temporibus sapiente quidem obcaecati magnam delectus maxime sit illum? Cumque reiciendis, autem explicabo ab enim, blanditiis quas perspiciatis ullam iste consectetur, nam assumenda provident.
+          </p>
+          <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut deleniti nisi tempore iure, voluptatem vel veniam repellat fugit doloribus sint nulla! Nam, alias! Unde quisquam iure temporibus sapiente quidem obcaecati magnam delectus maxime sit illum? Cumque reiciendis, autem explicabo ab enim, blanditiis quas perspiciatis ullam iste consectetur, nam assumenda provident.
+          </p>
+        </div>
+
+        <div class="mt-8 pt-4 border-t border-gray-300 text-center">
+          <p class="valentine-font text-2xl p-5 text-red-500 font-semibold">For uu!!</p>
+       
+        </div>
+      </div>
+    </div>
+
+  
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const scroll = document.getElementById("scroll");
+      let isOpen = false;
+
+      scroll.addEventListener("click", function () {
+        if (!isOpen) {
+          scroll.classList.remove("scroll-closed");
+          scroll.classList.add("scroll-open");
+          isOpen = true;
+        } else {
+          scroll.classList.remove("scroll-open");
+          scroll.classList.add("scroll-closed");
+          isOpen = false;
+        }
+      });
+    });
+  </script>
+</body>
+</html>
